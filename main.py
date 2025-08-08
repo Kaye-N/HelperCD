@@ -10,20 +10,21 @@ from PyQt6.QtGui import QPalette, QColor, QFont, QPixmap, QLinearGradient, QBrus
 from PyQt6.QtCore import Qt
 
 class MainWindow(QMainWindow):
+
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Helper")
         self.setGeometry(100, 100, 800, 600)
         self.setAutoFillBackground(True)
 
-        # Set font
+        #font 
         font = QFont('Archivo', 13)
         bold_font = QFont('Archivo', 13, QFont.Weight.Bold)
 
-        # Gradient background
+        #background
         gradient = QLinearGradient(0, 0, 0, self.height())
-        gradient.setColorAt(0.0, QColor("#342A47"))  # Dark purple
-        gradient.setColorAt(1.0, QColor("#5D4E8C"))  # Light purple
+        gradient.setColorAt(0.0, QColor("#342A47"))  
+        gradient.setColorAt(1.0, QColor("#5D4E8C"))  
         palette = QPalette()
         palette.setBrush(QPalette.ColorRole.Window, QBrush(gradient))
         self.setPalette(palette)
@@ -45,10 +46,14 @@ class MainWindow(QMainWindow):
         label.setFixedSize(150, 150)
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Buttons
+        #buttons and designs
         button_names = ["To do", "Clock", "Webscrape", "Exit"]
         buttons = [QPushButton(name) for name in button_names]
-        
+
+
+        #clock window instance
+        self.clock_window = None
+
         for button in buttons:
             button.setFont(bold_font)
             button.setMinimumHeight(50)
@@ -65,16 +70,29 @@ class MainWindow(QMainWindow):
                 }
             """)
 
-            # Add shadow effect
+            #button shadow
             shadow = QGraphicsDropShadowEffect()
             shadow.setBlurRadius(15)
             shadow.setOffset(3, 3)
             shadow.setColor(QColor(0, 0, 0, 160))  # Semi-transparent black
             button.setGraphicsEffect(shadow)
 
+                #button actions
+        if button.text() == "To do":
+            button.clicked.connect(lambda: print("To do clicked")) #placeholder
+        elif button.text() == "Clock":
+            button.clicked.connect(self.open_clock)
+        elif button.text() == "Exit":
+            button.clicked.connect(self.close)
 
+        def open_clock(self):
+            if self.clock_window is None:
+                self.clock_window = clock.PinkClock()
+                self.clock_window.show()
+                self.clock_window.raise_()
+                self.clock_window.activateWindow()
 
-        # Layout for image + buttons
+        #layout image+buttons
         content_layout = QVBoxLayout()
         content_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         content_layout.setSpacing(20)

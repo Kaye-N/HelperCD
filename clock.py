@@ -1,9 +1,34 @@
+import sys
+
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLayout
 )
 from PyQt6.QtCore import Qt, QTimer, QTime, QPropertyAnimation, QRect, QEasingCurve
 from PyQt6.QtGui import QFont, QColor, QPalette
 
+class ClockWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Clock')
+        self.setGeometry(100, 100, 400, 200)
+
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+
+        self.time_label = QLabel()
+        self.time_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.time_label.setFont(QFont('Arial', 48))
+        self.layout.addWidget(self.time_label)
+
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time)
+        self.timer.start(1000)  # update every second
+
+        self.update_time()
+
+    def update_time(self):
+        current_time = QTime.currentTime()
+        self.time_label.setText(current_time.toString('hh:mm:ss'))
 class BouncingLetter(QLabel):
     def __init__(self, letter, parent=None):
         super().__init__(letter, parent)
@@ -76,4 +101,3 @@ class PinkClock(QWidget):
     def animate_banner(self):
         for i, letter in enumerate(self.letters):
             letter.bounce(i * 100)
-
