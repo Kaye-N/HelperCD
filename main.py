@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         buttons = [QPushButton(name) for name in button_names]
 
 
-        #clock window instance
+      #clock window instance
         self.clock_window = None
 
         for button in buttons:
@@ -77,20 +77,13 @@ class MainWindow(QMainWindow):
             shadow.setColor(QColor(0, 0, 0, 160))  # Semi-transparent black
             button.setGraphicsEffect(shadow)
 
-                #button actions
-        if button.text() == "To do":
-            button.clicked.connect(lambda: print("To do clicked")) #placeholder
-        elif button.text() == "Clock":
-            button.clicked.connect(self.open_clock)
-        elif button.text() == "Exit":
-            button.clicked.connect(self.close)
-
-        def open_clock(self):
-            if self.clock_window is None:
-                self.clock_window = clock.PinkClock()
-                self.clock_window.show()
-                self.clock_window.raise_()
-                self.clock_window.activateWindow()
+            #button actions (FIXED INDENTATION)
+            if button.text() == "To do":
+                button.clicked.connect(lambda: print("To do clicked")) #placeholder
+            elif button.text() == "Clock":
+                button.clicked.connect(self.open_clock)
+            elif button.text() == "Exit":
+                button.clicked.connect(self.close)
 
         #layout image+buttons
         content_layout = QVBoxLayout()
@@ -106,6 +99,13 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(center_container, alignment=Qt.AlignmentFlag.AlignHCenter)
 
         main_layout.addStretch()
+    
+    def open_clock(self):
+        if self.clock_window is None:
+            self.clock_window = clock.PinkClock()
+        self.clock_window.show()
+        self.clock_window.raise_()
+        self.clock_window.activateWindow()
 
 
 if __name__ == '__main__':

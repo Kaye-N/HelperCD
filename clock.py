@@ -39,7 +39,7 @@ class BouncingLetter(QLabel):
         self.anim.setDuration(600)
         self.anim.setEasingCurve(QEasingCurve.Type.OutBounce)
 
-    def bounce(self, delay, y_offset=20):
+    def bounce(self, delay, y_offset=30):
         rect = self.geometry()
         start_rect = QRect(rect.x(), rect.y(), rect.width(), rect.height())
         end_rect = QRect(rect.x(), rect.y() - y_offset, rect.width(), rect.height())
@@ -51,8 +51,9 @@ class BouncingLetter(QLabel):
 class PinkClock(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Pink Aesthetic Clock')
+        self.setWindowTitle('Hallo! Good Day!')
         self.setGeometry(100, 100, 600, 300)
+        self.setMinimumSize(400, 200)
 
         self.setAutoFillBackground(True)
         palette = QPalette()
@@ -62,19 +63,17 @@ class PinkClock(QWidget):
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
-        # Banner text
-        banner_text = "Good Morning Good Afternoon Good Night"
-        self.banner_layout = QHBoxLayout()
-        self.letters = []
+        # Scrolling banner setup
+        self.banner_text = "   Good Morning  Good Afternoon  Good Night   "
+        self.scroll_index = 0
 
-        for i, char in enumerate(banner_text):
-            letter = BouncingLetter(char)
-            self.banner_layout.addWidget(letter)
-            self.letters.append(letter)
+        self.banner_label = QLabel()
+        self.banner_label.setFont(QFont('Arial', 24, QFont.Weight.Bold))
+        self.banner_label.setStyleSheet("color: hotpink;")
+        self.banner_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        layout.addWidget(self.banner_label)
 
-        layout.addLayout(self.banner_layout)
-
-        # Clock label
+        # Clock label with bounce animation
         self.clock_label = QLabel()
         self.clock_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.clock_label.setFont(QFont('Arial', 48, QFont.Weight.Bold))
@@ -88,16 +87,42 @@ class PinkClock(QWidget):
         self.timer.timeout.connect(self.update_time)
         self.timer.start(1000)
 
+        self.scroll_timer = QTimer(self)
+        self.scroll_timer.timeout.connect(self.scroll_banner)
+        self.scroll_timer.start(30)  # Faster for smoother scroll
+
+        self.bounce_anim = QPropertyAnimation(self.clock_label, b"geometry")
+        self.bounce_anim.setDuration(400)
+        self.bounce_anim.setEasingCurve(QEasingCurve.Type.OutBounce)
+
         self.bounce_timer = QTimer(self)
-        self.bounce_timer.timeout.connect(self.animate_banner)
+        self.bounce_timer.timeout.connect(self.animate_bounce)
         self.bounce_timer.start(2000)
 
         self.update_time()
+        self.scroll_banner()
+
+    def resizeEvent(self, event):
+        self.banner_label.setMinimumWidth(self.width())
+        super().resizeEvent(event)
 
     def update_time(self):
         current_time = QTime.currentTime()
         self.clock_label.setText(current_time.toString('hh:mm:ss'))
 
-    def animate_banner(self):
-        for i, letter in enumerate(self.letters):
-            letter.bounce(i * 100)
+    def scroll_banner(self):
+        # Calculate padding so text starts off-screen left
+        chars_visible = max(1, self.banner_label.width() // 16)  # ~16px per char
+        padded_text = " " * chars_visible + self.banner_text + " " * chars_visible
+        self.scroll_index = (self.scroll_index + 1) % len(padded_text)
+        display_text = padded_text[self.scroll_index:self.scroll_index + chars_visible]
+        self.banner_label.setText(display_text)
+
+    def animate_bounce(self):
+        rect = self.clock_label.geometry()
+        start_rect = QRect(rect.x(), rect.y(), rect.width(), rect.height())
+        end_rect = QRect(rect.x(), rect.y() - 30, rect.width(), rect.height())
+        self.bounce_anim.stop()
+        self.bounce_anim.setStartValue(start_rect)
+        self.bounce_anim.setEndValue(end_rect)
+        self.bounce_anim.start()
