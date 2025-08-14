@@ -29,6 +29,7 @@ class ClockWindow(QWidget):
     def update_time(self):
         current_time = QTime.currentTime()
         self.time_label.setText(current_time.toString('hh:mm:ss'))
+
 class BouncingLetter(QLabel):
     def __init__(self, letter, parent=None):
         super().__init__(letter, parent)
@@ -39,7 +40,7 @@ class BouncingLetter(QLabel):
         self.anim.setDuration(600)
         self.anim.setEasingCurve(QEasingCurve.Type.OutBounce)
 
-    def bounce(self, delay, y_offset=30):
+    def bounce(self, delay, y_offset=10):
         rect = self.geometry()
         start_rect = QRect(rect.x(), rect.y(), rect.width(), rect.height())
         end_rect = QRect(rect.x(), rect.y() - y_offset, rect.width(), rect.height())
@@ -72,9 +73,10 @@ class PinkClock(QWidget):
         self.banner_label.setStyleSheet("color: hotpink;")
         self.banner_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout.addWidget(self.banner_label)
+        layout.setSpacing(20)
 
         # Clock label with bounce animation
-        self.clock_label = QLabel()
+        self.clock_label = QLabel('Label')
         self.clock_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.clock_label.setFont(QFont('Arial', 48, QFont.Weight.Bold))
         self.clock_label.setStyleSheet("color: deeppink;")
@@ -89,7 +91,8 @@ class PinkClock(QWidget):
 
         self.scroll_timer = QTimer(self)
         self.scroll_timer.timeout.connect(self.scroll_banner)
-        self.scroll_timer.start(30)  # Faster for smoother scroll
+        #increase this one to make it faster
+        self.scroll_timer.start(30)  # 30 is fine
 
         self.bounce_anim = QPropertyAnimation(self.clock_label, b"geometry")
         self.bounce_anim.setDuration(400)
@@ -97,7 +100,7 @@ class PinkClock(QWidget):
 
         self.bounce_timer = QTimer(self)
         self.bounce_timer.timeout.connect(self.animate_bounce)
-        self.bounce_timer.start(2000)
+        self.bounce_timer.start(1500)
 
         self.update_time()
         self.scroll_banner()

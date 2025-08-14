@@ -4,7 +4,7 @@ import clock
 import sys
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QPushButton,
-    QVBoxLayout, QLabel, QGraphicsDropShadowEffect
+    QVBoxLayout, QLabel, QGraphicsDropShadowEffect, QSizePolicy
 )
 from PyQt6.QtGui import QPalette, QColor, QFont, QPixmap, QLinearGradient, QBrush
 from PyQt6.QtCore import Qt
@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
 
         main_layout.addStretch()
 
-        # Image label
+        # image label
         label = QLabel()
         image = QPixmap('Circleicon.png')
         label.setPixmap(image)
@@ -49,7 +49,27 @@ class MainWindow(QMainWindow):
         #buttons and designs
         button_names = ["To do", "Clock", "Webscrape", "Exit"]
         buttons = [QPushButton(name) for name in button_names]
+        
+        #clock window instance
+        self.scraper_window = None
 
+        for button in buttons:
+            button.setFont(bold_font)
+            button.setMinimumHeight(50)
+            button.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+            button.setStyleSheet(
+                """QPushButton {
+                    background-color: #6C63FF;
+                    color: white;
+                    border-radius: 15px;
+                    padding: 10px 20px;
+                    font-weight: bold;
+                }
+                QPushButton:hover {
+                    background-color: #857DFF;
+                    
+                }
+            """)
 
       #clock window instance
         self.clock_window = None
@@ -67,6 +87,7 @@ class MainWindow(QMainWindow):
                 }
                 QPushButton:hover {
                     background-color: #857DFF;
+                    
                 }
             """)
 
@@ -77,11 +98,13 @@ class MainWindow(QMainWindow):
             shadow.setColor(QColor(0, 0, 0, 160))  # Semi-transparent black
             button.setGraphicsEffect(shadow)
 
-            #button actions (FIXED INDENTATION)
+            #button actions
             if button.text() == "To do":
                 button.clicked.connect(lambda: print("To do clicked")) #placeholder
             elif button.text() == "Clock":
                 button.clicked.connect(self.open_clock)
+            elif button.text() == "Webscrape":
+                button.clicked.connect(lambda: print("Webscrape clicked")) #placeholder
             elif button.text() == "Exit":
                 button.clicked.connect(self.close)
 
