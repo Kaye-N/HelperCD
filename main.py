@@ -1,9 +1,10 @@
 #scripts 
 import clock
+import webscrape
 
 import sys
 from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QPushButton,
+    QMainWindow, QWidget, QPushButton,
     QVBoxLayout, QLabel, QGraphicsDropShadowEffect, QSizePolicy
 )
 from PyQt6.QtGui import QPalette, QColor, QFont, QPixmap, QLinearGradient, QBrush
@@ -104,7 +105,7 @@ class MainWindow(QMainWindow):
             elif button.text() == "Clock":
                 button.clicked.connect(self.open_clock)
             elif button.text() == "Webscrape":
-                button.clicked.connect(lambda: print("Webscrape clicked")) #placeholder
+                button.clicked.connect(lambda: print(self.open_webscrape)) #placeholder
             elif button.text() == "Exit":
                 button.clicked.connect(self.close)
 
@@ -130,9 +131,9 @@ class MainWindow(QMainWindow):
         self.clock_window.raise_()
         self.clock_window.activateWindow()
 
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    app.exec()
+    def open_webscape(self):
+        if self.clock_window is None:
+            self.clock_window = clock.ScrapePage()
+        self.clock_window.show()
+        self.clock_window.raise_()
+        self.clock_window.activateWindow()
