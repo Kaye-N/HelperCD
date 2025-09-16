@@ -1,6 +1,6 @@
 #scripts 
 import clock
-import webscrape
+import webscrape as scrape
 
 import sys
 from PyQt6.QtWidgets import (
@@ -50,9 +50,6 @@ class MainWindow(QMainWindow):
         #buttons and designs
         button_names = ["To do", "Clock", "Webscrape", "Exit"]
         buttons = [QPushButton(name) for name in button_names]
-        
-        #clock window instance
-        self.scraper_window = None
 
         for button in buttons:
             button.setFont(bold_font)
@@ -74,6 +71,8 @@ class MainWindow(QMainWindow):
 
       #clock window instance
         self.clock_window = None
+    #scraper window instance
+        self.scrape_window = None
 
         for button in buttons:
             button.setFont(bold_font)
@@ -132,8 +131,17 @@ class MainWindow(QMainWindow):
         self.clock_window.activateWindow()
 
     def open_webscape(self):
-        if self.clock_window is None:
-            self.clock_window = clock.ScrapePage()
-        self.clock_window.show()
-        self.clock_window.raise_()
-        self.clock_window.activateWindow()
+        if self.scrape_window is None:
+            self.scrape_window = scrape.ScrapePage()
+        self.scrape_window.show()
+        self.scrape_window.raise_()
+        self.scrape_window.activateWindow()
+
+if __name__ == "__main__":
+    import sys
+    from PyQt6.QtWidgets import QApplication
+
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
