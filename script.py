@@ -1,11 +1,10 @@
-import webscrape
+import url from webscrape
 
 from bs4 import BeautifulSoup
 import requests
 import sys
-import url from webscrape
 
-url = 
+url = 'https://www.reddit.com/?feed=home'
 
 headers = {'User-Agent':'Mozilla/5.0 '
             '(Windows NT 10.0; Win64; x64; rv:117.0) '
@@ -16,4 +15,4 @@ soup = BeautifulSoup(r.text, 'html.parser')
 
 print(soup.prettify())
 
-data = soup.find_all('')
+data = soup.find_all()
